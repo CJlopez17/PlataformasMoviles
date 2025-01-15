@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import '../presentation/modules/login.dart';
-import '../presentation/modules/register_company.dart';
-import '../presentation/modules/splash.dart';
-import '../presentation/modules/register_person.dart';
-import '../presentation/modules/select_account.dart';
+import '../presentation/modules/Home/button_panel.dart';
+import '../presentation/modules/Registe_Login/login.dart';
+import '../presentation/modules/Registe_Login/register_company.dart';
+import '../presentation/modules/Others/splash.dart';
+import '../presentation/modules/Registe_Login/register_person.dart';
+import '../presentation/modules/Registe_Login/select_account.dart';
 
 class AppRoutes {
   static const String selectAccount = '/select_account';
   static const String login = '/login';
   static const String register_person = '/register_person';
   static const String register_company = '/register_company';
+  static const String button_panel = '/button_panel';
   static const String splash = '/splash';
   
 
@@ -24,7 +26,9 @@ class AppRoutes {
       case register_company:
         return MaterialPageRoute(builder: (_) => const Register_Company()); 
       case splash:
-        return MaterialPageRoute(builder: (_) => const Splash());  
+        return MaterialPageRoute(builder: (_) => const Splash()); 
+      case button_panel:
+        return MaterialPageRoute(builder: (_) => const Button_Panel());  
        
 
       default:

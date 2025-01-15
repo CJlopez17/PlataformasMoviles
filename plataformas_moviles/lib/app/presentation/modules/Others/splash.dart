@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:plataformas_moviles/app/presentation/modules/login.dart';
+import 'package:plataformas_moviles/app/presentation/modules/Registe_Login/login.dart';
 
 class Splash extends StatefulWidget{
   const Splash({super.key});
