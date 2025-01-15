@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
+part of './app_theme.dart';
 
 abstract class LightSchema {
   static const Color primaryColor = Color(0xFFFE3791);
@@ -19,4 +20,4 @@ abstract class DarkSchema {
 
   static const Color fourthColor = Color(0xFF7266BA);
 }
-
+*/
