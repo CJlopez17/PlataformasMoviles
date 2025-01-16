@@ -47,7 +47,7 @@ class _Register_CompanyState extends State<Register_Company> {
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF3F3F3F)),
-                ),                
+                ),
                 const SizedBox(height: 13),
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -608,11 +608,11 @@ class _Register_CompanyState extends State<Register_Company> {
                 ),
                 const SizedBox(height: 7),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric( vertical: 20),
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: '+593',
-                      hintStyle: const TextStyle(color: Colors.black),
+                      prefix: const Text('+593', style: TextStyle(color: Colors.black),),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
