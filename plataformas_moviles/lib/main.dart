@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plataformas_moviles/app/presentation/modules/Others/splash.dart';
 import 'package:plataformas_moviles/app/routes/app_routes.dart';
 
 void main() {

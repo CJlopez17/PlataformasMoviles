@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/routes/app_routes.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,31 +17,59 @@ class _HomeState extends State<Home> {
           alignment: Alignment.centerRight,
           child: Padding(
             padding: const EdgeInsets.only(top: 5),
-            child: TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisSize: MainAxisSize
-                    .min, // Asegura que el Row ocupe solo el espacio necesario
-                children: [
-                  // Espacio entre la imagen y el texto
-                  const Text(
-                    'Camilo Godoy',
-                    style: TextStyle(
-                      color: Color(0xFF3F3F3F),
-                      fontSize: 17,
+            child: PopupMenuButton<String>(
+              onSelected: (value) {
+                // Maneja las acciones según la opción seleccionada
+                if (value == 'Perfil') {
+                  // Navegar a la página de perfil
+                  print('Ir a perfil');
+                } else if (value == 'Configuraciones') {
+                  // Navegar a la configuración
+                  print('Ir a configuraciones');
+                } else if (value == 'Salir') {
+                  // Cerrar sesión
+                  Navigator.pushNamed(context, '/login');
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Perfil',
+                  child: Text('Perfil'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Configuraciones',
+                  child: Text('Configuraciones'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Salir',
+                  child: Text('Salir'),
+                ),
+              ],
+              child: TextButton(
+                onPressed:
+                    null, // No necesitas esta acción porque el PopupMenuButton se encarga del evento
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Camilo Godoy',
+                      style: TextStyle(
+                        color: Color(0xFF3F3F3F),
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Image.asset(
-                    'assets/images/persona.png',
-                    height: 30, // Ajusta el tamaño de la imagen si es necesario
-                  ),
-                  const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 27,
-                    color: Color(0xFF3F3F3F),
-                  )
-                ],
+                    const SizedBox(width: 8),
+                    Image.asset(
+                      'assets/images/persona.png',
+                      height: 30,
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 27,
+                      color: Color(0xFF3F3F3F),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -89,17 +118,17 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: EdgeInsets.only(left: 15, top: 5),
                 child: Text('PEDIDO ACTUAL',
-                      style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
-                ),
+                    style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
               ),
-              const SizedBox(height: 10),
+            ),
+            const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                   BoxShadow(
+                  BoxShadow(
                     color: Colors.grey,
                     spreadRadius: 1,
                     blurRadius: 5,
@@ -195,17 +224,17 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: EdgeInsets.only(left: 15, top: 5),
                 child: Text('PEDIDOS ANTERIORES',
-                      style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
-                ),
+                    style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
               ),
-              const SizedBox(height: 23),
-              Container(
+            ),
+            const SizedBox(height: 23),
+            Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                   BoxShadow(
+                  BoxShadow(
                     color: Colors.grey,
                     spreadRadius: 1,
                     blurRadius: 5,

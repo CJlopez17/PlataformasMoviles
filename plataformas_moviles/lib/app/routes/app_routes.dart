@@ -7,24 +7,27 @@ import '../presentation/modules/Registe_Login/register_person.dart';
 import '../presentation/modules/Registe_Login/select_account.dart';
 
 class AppRoutes {
-  static const String selectAccount = '/select_account';
   static const String login = '/login';
+  static const String selectAccount = '/select_account';
+  // ignore: constant_identifier_names
   static const String register_person = '/register_person';
+  // ignore: constant_identifier_names
   static const String register_company = '/register_company';
+  // ignore: constant_identifier_names
   static const String button_panel = '/button_panel';
   static const String splash = '/splash';
   
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case selectAccount:
-        return MaterialPageRoute(builder: (_) => const SelectAccount());
       case login:
         return MaterialPageRoute(builder: (_) => const Login());
+      case selectAccount:
+        return MaterialPageRoute(builder: (_) => const SelectAccount());
       case register_person:
         return MaterialPageRoute(builder: (_) => const Register_Person());
       case register_company:
-        return MaterialPageRoute(builder: (_) => const Register_Company()); 
+        return MaterialPageRoute(builder: (_) => const Register_Company());
       case splash:
         return MaterialPageRoute(builder: (_) => const Splash()); 
       case button_panel:
