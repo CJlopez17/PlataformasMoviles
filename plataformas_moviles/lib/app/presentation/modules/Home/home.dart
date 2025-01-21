@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
                   // Navegar a la configuración
                   print('Ir a configuraciones');
                 } else if (value == 'Salir') {
+                  print('Hola');
                   // Cerrar sesión
                   Navigator.pushNamed(context, '/login');
                 }
