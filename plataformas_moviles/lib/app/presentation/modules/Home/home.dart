@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plataformas_moviles/app/routes/app_routes.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,16 +20,14 @@ class _HomeState extends State<Home> {
               onSelected: (value) {
                 // Maneja las acciones según la opción seleccionada
                 if (value == 'Perfil') {
-                  // Navegar a la página de perfil
-                  print('Ir a perfil');
+                  Navigator.pushNamed(context, '/profile');
                 } else if (value == 'Configuraciones') {
                   // Navegar a la configuración
                   print('Ir a configuraciones');
                 } else if (value == 'Salir') {
-                  print('Hola');
-                  // Cerrar sesión
-                  Navigator.pushNamed(context, '/login');
+                  _showAlertDialog(context);
                 }
+                ;
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(
@@ -124,7 +121,8 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.all(16.0),
+              width: 410,
+              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -230,7 +228,8 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 23),
             Container(
-              padding: const EdgeInsets.all(16.0),
+              width: 410,
+              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -317,6 +316,97 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
+            Container(
+              width: 410,
+              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.local_shipping, color: Colors.grey[600]),
+                      const SizedBox(width: 8),
+                      const Text(
+                        '#HWDSF776567DS',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        'EN CAMINO · 24 DIC',
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'DESDE',
+                            style: TextStyle(
+                              color: Colors.pink,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            'Miami',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'A',
+                            style: TextStyle(
+                              color: Colors.pink,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            'Cuenca',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -345,13 +435,15 @@ Widget _buildTrackingLine() {
   return Stack(
     children: [
       Container(
-        height: 2,
+        height: 3,
         color: Colors.grey[200],
       ),
-      Container(
-        height: 2,
-        width: 2,
-        color: const Color(0xFFFF1E68),
+      FractionallySizedBox(
+        widthFactor: 0.633, 
+        child: Container(
+          height: 3,
+          color: const Color(0xFFFF1E68),
+        ),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -386,5 +478,51 @@ Widget _buildDot(bool completed) {
             size: 16,
           )
         : null,
+  );
+}
+
+void _showAlertDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFF3F3F3F),
+        title: const Center(
+            child: Text(
+          'Cerrar Sesión',
+          style: TextStyle(fontSize: 30, color: Color(0xFFFF3333)),
+        )),
+        content: const Text(
+          'Esta seguro que quiere cerrar su sesión.',
+          style: TextStyle(fontSize: 15, color: Colors.white),
+        ),
+        actions: <Widget>[
+          Center(
+              child: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/login');
+            },
+            backgroundColor: const Color(0xFF7266BA),
+            label: const Text(
+              "Aceptar",
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+          const SizedBox(height: 10,),
+          Center(
+              child: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+            backgroundColor: const Color(0xFF7266BA),
+            label: const Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+        ],
+      );
+    },
   );
 }

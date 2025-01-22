@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/profile.dart';
 import '../presentation/modules/Home/button_panel.dart';
 import '../presentation/modules/Registe_Login/login.dart';
 import '../presentation/modules/Registe_Login/register_company.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String register_company = '/register_company';
   // ignore: constant_identifier_names
   static const String button_panel = '/button_panel';
+  static const String profile = '/profile';
   static const String splash = '/splash';
   
 
@@ -31,7 +33,9 @@ class AppRoutes {
       case splash:
         return MaterialPageRoute(builder: (_) => const Splash()); 
       case button_panel:
-        return MaterialPageRoute(builder: (_) => const Button_Panel());  
+        return MaterialPageRoute(builder: (_) => const Button_Panel()); 
+      case profile:
+        return MaterialPageRoute(builder: (_) => const Profile());    
        
 
       default:
