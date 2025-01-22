@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/Others/user_menu.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,66 +13,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: PopupMenuButton<String>(
-              onSelected: (value) {
-                // Maneja las acciones según la opción seleccionada
-                if (value == 'Perfil') {
-                  Navigator.pushNamed(context, '/profile');
-                } else if (value == 'Configuraciones') {
-                  // Navegar a la configuración
-                  print('Ir a configuraciones');
-                } else if (value == 'Salir') {
-                  _showAlertDialog(context);
-                }
-                ;
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'Perfil',
-                  child: Text('Perfil'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'Configuraciones',
-                  child: Text('Configuraciones'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'Salir',
-                  child: Text('Salir'),
-                ),
-              ],
-              child: TextButton(
-                onPressed:
-                    null, // No necesitas esta acción porque el PopupMenuButton se encarga del evento
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Camilo Godoy',
-                      style: TextStyle(
-                        color: Color(0xFF3F3F3F),
-                        fontSize: 17,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Image.asset(
-                      'assets/images/persona.png',
-                      height: 30,
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 27,
-                      color: Color(0xFF3F3F3F),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: UserMenu(
+                userName: 'Camilo Godoy',
+                userImagePath: 'assets/images/persona.png'),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -122,7 +71,8 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 10),
             Container(
               width: 410,
-              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 18, right: 18, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -229,7 +179,8 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 23),
             Container(
               width: 410,
-              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 18, right: 18, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -319,7 +270,8 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 20),
             Container(
               width: 410,
-              padding: const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 18, right: 18, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -439,7 +391,7 @@ Widget _buildTrackingLine() {
         color: Colors.grey[200],
       ),
       FractionallySizedBox(
-        widthFactor: 0.633, 
+        widthFactor: 0.633,
         child: Container(
           height: 3,
           color: const Color(0xFFFF1E68),
@@ -478,51 +430,5 @@ Widget _buildDot(bool completed) {
             size: 16,
           )
         : null,
-  );
-}
-
-void _showAlertDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: const Color(0xFF3F3F3F),
-        title: const Center(
-            child: Text(
-          'Cerrar Sesión',
-          style: TextStyle(fontSize: 30, color: Color(0xFFFF3333)),
-        )),
-        content: const Text(
-          'Esta seguro que quiere cerrar su sesión.',
-          style: TextStyle(fontSize: 15, color: Colors.white),
-        ),
-        actions: <Widget>[
-          Center(
-              child: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/login');
-            },
-            backgroundColor: const Color(0xFF7266BA),
-            label: const Text(
-              "Aceptar",
-              style: TextStyle(color: Colors.white),
-            ),
-          )),
-          const SizedBox(height: 10,),
-          Center(
-              child: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
-            backgroundColor: const Color(0xFF7266BA),
-            label: const Text(
-              "Cancelar",
-              style: TextStyle(color: Colors.white),
-            ),
-          )),
-        ],
-      );
-    },
   );
 }

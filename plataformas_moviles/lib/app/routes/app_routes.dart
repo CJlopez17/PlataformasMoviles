@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configuration.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/profile.dart';
 import '../presentation/modules/Home/button_panel.dart';
 import '../presentation/modules/Registe_Login/login.dart';
@@ -17,13 +18,11 @@ class AppRoutes {
   // ignore: constant_identifier_names
   static const String button_panel = '/button_panel';
   static const String profile = '/profile';
+  static const String configuration = '/configuration';
   static const String splash = '/splash';
-  
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case login:
-        return MaterialPageRoute(builder: (_) => const Login());
       case selectAccount:
         return MaterialPageRoute(builder: (_) => const SelectAccount());
       case register_person:
@@ -31,20 +30,16 @@ class AppRoutes {
       case register_company:
         return MaterialPageRoute(builder: (_) => const Register_Company());
       case splash:
-        return MaterialPageRoute(builder: (_) => const Splash()); 
+        return MaterialPageRoute(builder: (_) => const Splash());
       case button_panel:
-        return MaterialPageRoute(builder: (_) => const Button_Panel()); 
+        return MaterialPageRoute(builder: (_) => const Button_Panel());
       case profile:
-        return MaterialPageRoute(builder: (_) => const Profile());    
-       
+        return MaterialPageRoute(builder: (_) => const Profile());
+      case configuration:
+        return MaterialPageRoute(builder: (_) => const Configuration());
 
       default:
-        return MaterialPageRoute(
-            builder: (_) => Scaffold(
-                  body: Center(
-                    child: Text('No se encontro la ruta: ${settings.name}'),
-                  ),
-                ));
+        return MaterialPageRoute(builder: (_) => const Login());
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:plataformas_moviles/app/presentation/modules/Home/cart.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Home/home.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Home/locker.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Home/record.dart';
@@ -25,7 +26,7 @@ class _Button_PanelState extends State<Button_Panel> {
     return [
       const Home(),
       const Locker(),
-      const Card(),
+      const Cart(),
       const Record(),
       const Shopping()
     ];

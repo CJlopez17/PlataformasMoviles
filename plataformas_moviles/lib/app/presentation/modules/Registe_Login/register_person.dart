@@ -744,10 +744,6 @@ class _Register_PersonState extends State<Register_Person> {
                       value: "Mujer",
                       child: Text("Mujer"),
                     ),
-                    DropdownMenuItem(
-                      value: "Problemas mentales",
-                      child: Text("Problemas mentales"),
-                    ),
                   ],
                   onChanged: (value) {
                     setState(() {

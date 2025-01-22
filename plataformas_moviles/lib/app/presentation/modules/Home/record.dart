@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../Others/user_menu.dart';
+
 class Record extends StatefulWidget {
   const Record({super.key});
 
@@ -14,37 +16,6 @@ class _RecordState extends State<Record> {
       length: 4, // Número de tabs en el TabBar
       child: Scaffold(
         appBar: AppBar(
-          title: Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: TextButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Camilo Godoy',
-                      style: TextStyle(
-                        color: Color(0xFF3F3F3F),
-                        fontSize: 17,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Image.asset(
-                      'assets/images/persona.png',
-                      height: 30,
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 27,
-                      color: Color(0xFF3F3F3F),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
