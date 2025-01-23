@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configurations_pages/address_format.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configurations_pages/appearance.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configurations_pages/notifications.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configurations_pages/policies.dart';
 
 class Configuration extends StatefulWidget {
   const Configuration({super.key});
@@ -32,7 +36,10 @@ class _ConfigurationState extends State<Configuration> {
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/address_format');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const AddressFormat()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFF7F7F7),
@@ -88,7 +95,10 @@ class _ConfigurationState extends State<Configuration> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      text: Text('hola');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const Policies()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF7F7F7),
@@ -128,7 +138,10 @@ class _ConfigurationState extends State<Configuration> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      text: Text('Hola');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const Notifications()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF7F7F7),
@@ -136,7 +149,6 @@ class _ConfigurationState extends State<Configuration> {
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(),
                       ),
-                      
                     ),
                     child: const Align(
                       alignment: Alignment.centerLeft,
@@ -166,7 +178,10 @@ class _ConfigurationState extends State<Configuration> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      text: Text('hola');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const Appearance()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF7F7F7),
