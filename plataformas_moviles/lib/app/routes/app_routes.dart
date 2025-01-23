@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configurations_pages/address_format.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configuration.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/profile.dart';
 import '../presentation/modules/Home/button_panel.dart';
@@ -19,6 +20,8 @@ class AppRoutes {
   static const String button_panel = '/button_panel';
   static const String profile = '/profile';
   static const String configuration = '/configuration';
+  // ignore: constant_identifier_names
+  static const String address_format = '/address_format';
   static const String splash = '/splash';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,6 +40,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Profile());
       case configuration:
         return MaterialPageRoute(builder: (_) => const Configuration());
+      case address_format:
+        return MaterialPageRoute(builder: (_) => const AddressFormat());
 
       default:
         return MaterialPageRoute(builder: (_) => const Login());

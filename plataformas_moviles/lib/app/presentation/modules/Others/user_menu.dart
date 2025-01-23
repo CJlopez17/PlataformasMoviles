@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configuration.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/profile.dart';
 
 class UserMenu extends StatelessWidget {
@@ -20,7 +21,9 @@ class UserMenu extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const Profile()),
           );
         } else if (value == 'Configuraciones') {
-          Navigator.pushNamed(context, '/configuration');
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const Configuration()),
+          );
         } else if (value == 'Salir') {
           _showAlertDialog(context);
         }
