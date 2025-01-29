@@ -122,9 +122,11 @@ class _Register_PersonState extends State<Register_Person> {
             _neighborhoodController.clear();
           });
 
+          // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/button_panel');
         }
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
@@ -143,7 +145,7 @@ class _Register_PersonState extends State<Register_Person> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -180,7 +182,7 @@ class _Register_PersonState extends State<Register_Person> {
               ),
               const SizedBox(height: 13),
               DropdownButtonFormField<String>(
-                value: _selectedIdType != null ? _selectedIdType : null,
+                value: _selectedIdType,
                 hint: const Text(
                   "Selecciona un tipo de identificación...",
                   style: TextStyle(color: Colors.grey),
@@ -898,12 +900,12 @@ class _Register_PersonState extends State<Register_Person> {
                 value: _selectedGender,
                 items: const [
                   DropdownMenuItem(
-                    value: "Hombre",
-                    child: Text("Hombre"),
+                    value: "Masculino",
+                    child: Text("Masculino"),
                   ),
                   DropdownMenuItem(
-                    value: "Mujer",
-                    child: Text("Mujer"),
+                    value: "Femenino",
+                    child: Text("Femenino"),
                   ),
                 ],
                 onChanged: (value) {

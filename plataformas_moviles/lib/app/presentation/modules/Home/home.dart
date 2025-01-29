@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Others/user_menu.dart';
 
@@ -9,17 +11,45 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<Map<String, dynamic>?> _getUserData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid == null) return null;
+
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return userDoc.data();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: UserMenu(
-                userName: 'Camilo Godoy',
-                userImagePath: 'assets/images/persona.png'),
-          )
+              padding: const EdgeInsets.only(right: 16),
+              child: FutureBuilder<Map<String, dynamic>?>(
+                  future: _getUserData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError || snapshot.data == null) {
+                      return const Text("Error al cargar datos");
+                    }
+
+                    final firstName = snapshot.data!['firstName'] ?? 'Usuario';
+                    final lastName = snapshot.data!['lastName'] ?? '';
+                    final userImagePath = snapshot.data!['imagePath'] ??
+                        'assets/images/defaultUser.png';
+
+                    return UserMenu(
+                      firstName: firstName,
+                      lastName: lastName,
+                      userImagePath: userImagePath,
+                    );
+                  }))
         ],
       ),
       body: SingleChildScrollView(

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/configuration.dart';
 import 'package:plataformas_moviles/app/presentation/modules/%20Profile/profile.dart';
-import 'package:plataformas_moviles/app/routes/app_routes.dart';
 
 class UserMenu extends StatelessWidget {
-  final String userName;
+  final String firstName;
+  final String lastName;
   final String userImagePath;
 
   const UserMenu({
     super.key,
-    required this.userName,
+    required this.firstName,
+    required this.lastName,
     required this.userImagePath,
   });
 
@@ -49,16 +50,23 @@ class UserMenu extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              userName,
+              firstName,
               style: const TextStyle(
                 color: Color(0xFF3F3F3F),
                 fontSize: 17,
               ),
             ),
             const SizedBox(width: 8),
-            Image.asset(
-              userImagePath,
-              height: 30,
+            Text(
+              lastName,
+              style: const TextStyle(
+                color: Color(0xFF3F3F3F),
+                fontSize: 17,
+              ),
+            ),
+            const SizedBox(width: 8),
+            CircleAvatar(
+              backgroundImage: AssetImage(userImagePath), // Imagen del usuario
             ),
             const Icon(
               Icons.keyboard_arrow_down,

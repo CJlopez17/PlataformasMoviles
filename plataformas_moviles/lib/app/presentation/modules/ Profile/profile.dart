@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -9,35 +11,95 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   bool _isEditing = false;
-
   final TextEditingController _idTypeController =
       TextEditingController(text: 'Personal');
   final List<String> _idTypePersonalOptions = [
-    'Cédula de identidad',
+    'Licencia de Conduccion',
+    'TAX ID (Solo USA)',
+    'Credencial de Elector',
+    'RUC (Registro Unico de Contribuyentes)',
+    'Cedula de Ciudadania',
+    'Cedula de Extranjeria',
     'Pasaporte',
-    'RUC',
   ];
-  String? _selectedIdTypePersonal = 'Cédula de identidad';
-  final TextEditingController _idController =
-      TextEditingController(text: '1234567890');
-  final TextEditingController _namesController =
-      TextEditingController(text: 'Camilo Josue');
-  final TextEditingController _lastnameController =
-      TextEditingController(text: 'Godoy López');
+  String? _selectedIdTypePersonal;
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _namesController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final List<String> _genderOptions = ['Masculino', 'Femenino'];
-  String? _selectedGender = 'Masculino';
-  final List<String> _countryOptions = ['Ecuador', 'Colombia', 'Perú'];
-  String? _selectedCountry = 'Ecuador';
+  String? _selectedGender;
+  final List<String> _countryOptions = [
+    'China',
+    'Cuba',
+    'Ecuador',
+    'Estados Unidos',
+    'RAE de Honk Kong (China)'
+  ];
+  String? _selectedCountry;
   final List<String> _stateOptions = ['Loja', 'Pichincha', 'Guayas'];
-  String? _selectedState = 'Loja';
-  final List<String> _cityOptions = ['Loja', 'Quito', 'Guayaquil'];
-  String? _selectedCity = 'Loja';
-  final TextEditingController _addressController =
-      TextEditingController(text: 'Salvador entre Filipinas y Quevec');
-  final TextEditingController _phoneController =
-      TextEditingController(text: '+593 989204851');
-  final TextEditingController _emailController =
-      TextEditingController(text: 'camiloGodoy@icloud.com');
+  String? _selectedState;
+  final List<String> _cityOptions = [
+    'Loja',
+    'Catamayo',
+    'Catacocha',
+    'Alamor',
+    'Alamuza',
+    'Macará'
+  ];
+  String? _selectedCity;
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final userData = userDoc.data();
+    if (userData != null) {
+      setState(() {
+        _selectedIdTypePersonal = userData['idType'];
+        _idController.text = userData['nit'];
+        _namesController.text = userData['firstName'];
+        _lastnameController.text = userData['lastName'];
+        _selectedGender = userData['gender'];
+        _selectedCountry = userData['idCountry'];
+        _selectedState = userData['state'];
+        _selectedCity = userData['city'];
+        _addressController.text = userData['address'];
+        _phoneController.text = userData['phone'];
+        _emailController.text = userData['email'];
+      });
+    }
+  }
+
+  Future<void> _updateUserData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid == null) return;
+
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'idType': _selectedIdTypePersonal,
+      'idNumber': _idController.text,
+      'names': _namesController.text,
+      'lastname': _lastnameController.text,
+      'gender': _selectedGender,
+      'country': _selectedCountry,
+      'state': _selectedState,
+      'city': _selectedCity,
+      'address': _addressController.text,
+      'phone': _phoneController.text,
+      'email': _emailController.text,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +111,16 @@ class _ProfileState extends State<Profile> {
             const SizedBox(height: 20),
             const CircleAvatar(
               radius: 60,
-              backgroundImage: AssetImage('assets/images/persona2.png'),
+              backgroundImage: AssetImage('assets/images/defaultUser.png'),
             ),
             const SizedBox(height: 15),
-            const Text(
-              'Camilo Godoy',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              _namesController.text,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              _lastnameController.text,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
             _buildTextField(
@@ -163,7 +229,10 @@ class _ProfileState extends State<Profile> {
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        if (_isEditing) {
+                          await _updateUserData();
+                        }
                         setState(() {
                           _isEditing = !_isEditing;
                         });
