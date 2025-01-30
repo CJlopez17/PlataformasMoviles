@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Others/user_menu.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,14 +12,65 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String? _usuarioEstado;
+
   Future<Map<String, dynamic>?> _getUserData() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-
     if (uid == null) return null;
-
     final userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return userDoc.data();
+  }
+
+  Future<void> _getUserState() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        setState(() {
+          _usuarioEstado = userDoc['state'];
+        });
+      } else {
+        setState(() {
+          _usuarioEstado = 'Estado no disponible';
+        });
+      }
+    }
+  }
+
+  Future<List<DocumentSnapshot>> _getPaquetes() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print("No hay usuario autenticado.");
+      return [];
+    }
+    final QuerySnapshot paquetesSnapshot = await FirebaseFirestore.instance
+        .collection('paquetes')
+        .where('destinatario', isEqualTo: user.uid)
+        .get();
+    return paquetesSnapshot.docs;
+  }
+
+  double _getProgress(String estado) {
+    switch (estado) {
+      case 'PENDIENTE':
+        return 0.1;
+      case 'EN PROGRESO':
+        return 0.5;
+      case 'COMPLETADO':
+        return 1.0;
+      default:
+        return 0.0;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserState();
   }
 
   @override
@@ -98,367 +150,243 @@ class _HomeState extends State<Home> {
                     style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
               ),
             ),
-            const SizedBox(height: 10),
-            Container(
-              width: 410,
-              padding: const EdgeInsets.only(
-                  left: 18, right: 18, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.local_shipping, color: Colors.grey[600]),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '#HWDSF776567DS',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        'EN CAMINO · 24 DIC',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTrackingLine(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'DESDE',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Miami',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'A',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Cuenca',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FutureBuilder<List<DocumentSnapshot>>(
+                future: _getPaquetes(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError ||
+                      !snapshot.hasData ||
+                      snapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text("No se encontraron paquetes"));
+                  } else {
+                    final paquetes = snapshot.data!;
+                    final paquetesActuales = paquetes.where((paquete) {
+                      String estado = paquete['estado'] ?? 'PENDIENTE';
+                      return estado == 'PENDIENTE' || estado == 'EN PROGRESO';
+                    }).toList();
+
+                    return Column(
+                      children: paquetesActuales.map((paquete) {
+                        return _buildPaqueteCard(paquete);
+                      }).toList(),
+                    );
+                  }
+                },
               ),
             ),
-            const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 15, top: 5),
-                child: Text('PEDIDOS ANTERIORES',
-                    style: TextStyle(color: Color(0xFF3F3F3F), fontSize: 20)),
-              ),
-            ),
-            const SizedBox(height: 23),
-            Container(
-              width: 410,
-              padding: const EdgeInsets.only(
-                  left: 18, right: 18, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.local_shipping, color: Colors.grey[600]),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '#HWDSF776567DS',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        'EN CAMINO · 24 DIC',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'DESDE',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Miami',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'A',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Cuenca',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: 410,
-              padding: const EdgeInsets.only(
-                  left: 18, right: 18, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.local_shipping, color: Colors.grey[600]),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '#HWDSF776567DS',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        'EN CAMINO · 24 DIC',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'DESDE',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Miami',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'A',
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            'Cuenca',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
-}
 
-Widget _buildNavItem(IconData icon, String label) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 40, color: const Color(0xFF7266BA)),
-      const SizedBox(height: 8),
-      Text(
-        label,
-        style: const TextStyle(
-          fontSize: 14,
-          color: Color(0xFF3F3F3F),
+  Widget _buildNavItem(IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 40, color: const Color(0xFF7266BA)),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF3F3F3F),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaqueteCard(DocumentSnapshot paquete) {
+    var paqueteData = paquete.data() as Map<String, dynamic>;
+    String estado = paqueteData['estado'] ?? 'PENDIENTE';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        width: 410,
+        padding:
+            const EdgeInsets.only(left: 18, right: 18, top: 10, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 1,
+              blurRadius: 5,
+            ),
+          ],
+          border: Border.all(
+            color: const Color.fromARGB(255, 190, 190, 190),
+            width: 2,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.local_shipping, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text(
+                  paqueteData['tracking'] ?? 'Tracking no disponible',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                height: 40,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: LinearProgressIndicator(
+                        value: _getProgress(estado),
+                        color: const Color(0xFFFF1E68),
+                        backgroundColor: Colors.grey[300],
+                        minHeight: 6,
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF1E68),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: const Icon(Icons.check,
+                              size: 20, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: _getProgress(estado) >= 0.5
+                                ? const Color(0xFFFF1E68)
+                                : Colors.grey[300],
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.access_time,
+                            size: 20,
+                            color: _getProgress(estado) >= 0.5
+                                ? Colors.white
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: BoxDecoration(
+                            color: _getProgress(estado) == 1.0
+                                ? const Color(0xFFFF1E68)
+                                : Colors.grey[300],
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.done_all,
+                            size: 20,
+                            color: _getProgress(estado) == 1.0
+                                ? Colors.white
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  '${estado} · ${_formatTimestamp(paqueteData['timestamp']) ?? 'Fecha no disponible'}',
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'DESDE',
+                      style: TextStyle(
+                        color: Colors.pink,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const Text(
+                      'Miami',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'A',
+                      style: TextStyle(
+                        color: Colors.pink,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      _usuarioEstado ?? 'Estado no disponible',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    ],
-  );
-}
+    );
+  }
 
-Widget _buildTrackingLine() {
-  return Stack(
-    children: [
-      Container(
-        height: 3,
-        color: Colors.grey[200],
-      ),
-      FractionallySizedBox(
-        widthFactor: 0.633,
-        child: Container(
-          height: 3,
-          color: const Color(0xFFFF1E68),
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildDot(true),
-          _buildDot(true),
-          _buildDot(true),
-          _buildDot(false),
-          _buildDot(false),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buildDot(bool completed) {
-  return Container(
-    width: 24,
-    height: 24,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: completed ? const Color(0xFFFF1E68) : Colors.white,
-      border: Border.all(
-        color: completed ? const Color(0xFFFF1E68) : const Color(0xFFEDEDED),
-        width: 2,
-      ),
-    ),
-    child: completed
-        ? const Icon(
-            Icons.check,
-            color: Colors.white,
-            size: 16,
-          )
-        : null,
-  );
+  String? _formatTimestamp(Timestamp? timestamp) {
+    if (timestamp == null) return null;
+    final date = timestamp.toDate();
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
 }

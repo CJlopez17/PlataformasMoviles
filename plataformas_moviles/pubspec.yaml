@@ -19,11 +19,20 @@ dependencies:
   url_launcher: ^6.0.9
   firebase_auth: ^5.4.1
   cloud_firestore: ^5.6.2
+  firebase_storage: ^12.4.1
+  flutter_launcher_icons: ^0.14.3
+  youtube_player_flutter: ^9.1.1 
+
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo1.png"
 
 
 flutter:
