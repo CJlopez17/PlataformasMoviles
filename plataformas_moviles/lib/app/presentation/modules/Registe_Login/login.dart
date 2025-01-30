@@ -78,7 +78,7 @@ class LoginState extends State<Login> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     prefixIcon:
-                        const Icon(Icons.email, color: Color(0xFF3F3F3F)),
+                        const Icon(Icons.email, color: Color(0xFFFF1E68)),
                     hintText: 'Correo electrónico',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),

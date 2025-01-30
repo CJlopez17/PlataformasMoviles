@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:plataformas_moviles/app/presentation/modules/Others/user_menu.dart';
 import 'package:intl/intl.dart';
 
+import 'Others_home/contacts.dart';
+import 'Others_home/quote.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -135,10 +138,31 @@ class _HomeState extends State<Home> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(Icons.inventory_2_outlined, "PAQUETES"),
-                  _buildNavItem(Icons.shopping_cart_outlined, "COMPRAR"),
-                  _buildNavItem(Icons.calculate_outlined, "COTIZAR"),
-                  _buildNavItem(Icons.support_agent_outlined, "CONTACTO"),
+                  GestureDetector(
+                onTap: () {
+                  // Navegar a la pantalla Cotizar
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Quote(),
+                    ),
+                  );
+                },
+                child: _buildNavItem(Icons.calculate_outlined, "Cotizar"),
+              ),
+              // Botón para Contacto
+              GestureDetector(
+                onTap: () {
+                  // Navegar a la pantalla Contacto
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Contacts(),
+                    ),
+                  );
+                },
+                child: _buildNavItem(Icons.support_agent_outlined, "Contactos"),
+              ),
                 ],
               ),
             ),
@@ -338,17 +362,17 @@ class _HomeState extends State<Home> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'DESDE',
                       style: TextStyle(
                         color: Colors.pink,
                         fontSize: 12,
                       ),
                     ),
-                    const Text(
+                     Text(
                       'Miami',
                       style: TextStyle(
                         fontSize: 16,

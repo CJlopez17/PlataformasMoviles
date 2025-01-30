@@ -28,7 +28,7 @@ class _ShoppingState extends State<Shopping> {
           backgroundColor: const Color(0xFF3F3F3F),
           title: const Center(child: Text('¡Confirmación!', style: TextStyle(color: Colors.red),)),
           content: const Text(
-              '" Recuerda tener configurada la dirección de tu casillero en las diferentes tiendas donde vayas a realizar tus compras. "', style: TextStyle(color: Colors.white),),
+              'Recuerda tener configurada la dirección de tu casillero en las diferentes tiendas donde vayas a realizar tus compras.', style: TextStyle(color: Colors.white),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
