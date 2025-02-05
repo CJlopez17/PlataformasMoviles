@@ -21,13 +21,13 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.x"  # Sustituye por la versión específica que uses
+
+      - name: Problemns
+        run: flutter doctor
       
       # Instalación de dependencias
       - name: Install Dependencies
         run: flutter pub get
-
-      - name: Problemns
-        run: flutter doctor
 
       - name: Build iOS
         run: flutter build ios --no-codesign  # No firma el código automáticamente
