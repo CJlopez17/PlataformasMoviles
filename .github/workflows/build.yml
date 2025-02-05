@@ -20,10 +20,10 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"  # Sustituye por la versión específica que uses
+          flutter-version: "3.x" # Sustituye por la versión específica que uses
 
-      - name: Problemns
-        run: flutter doctor
+      - name: Change directory to project root
+        run: cd plataformas_moviles     
       
       # Instalación de dependencias
       - name: Install Dependencies
