@@ -24,12 +24,10 @@ jobs:
       
       # Instalación de dependencias
       - name: Install Dependencies
-        working-directory: ./
         run: flutter pub get
 
-      # Compilación del proyecto
-      - name: Build APK
-        run: flutter build apk
+      - name: Problemns
+        run: flutter doctor
 
       - name: Build iOS
         run: flutter build ios --no-codesign  # No firma el código automáticamente
