@@ -21,15 +21,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.x"  # Sustituye por la versión específica que uses
-
-      - name: Check directory structure
-        run: ls -la
-
-      - name: Change directory to project root
-        run: cd plataformas_moviles
-        
+      
       # Instalación de dependencias
       - name: Install Dependencies
+        working-directory: ./
         run: flutter pub get
 
       # Compilación del proyecto
